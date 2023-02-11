@@ -158,12 +158,9 @@ echo "----------------------------------------------------------------"
 service caddy stop
 cp caddy /usr/bin/
 
-# xkcd密码生成器页面
-echo
-echo -e "$yellow xkcd密码生成器页面 $none"
-echo "----------------------------------------------------------------"
-rm -r /var/www/xkcdpw-html
-git clone https://github.com/crazypeace/xkcd-password-generator -b "master" /var/www/xkcdpw-html --depth=1
+# 写个简单的html页面
+mkdir -p /var/www/html
+echo "hello world" > /var/www/html/index.html
 
 # 域名
 if [[ -z $naive_domain ]]; then
@@ -310,15 +307,23 @@ sed -i "1i # _naive_config_begin_\n\
   order forward_proxy before file_server\n\
 }\n\
 :${naive_port}, ${naive_domain}:${naive_port} {\n\
-  tls e16d9cb045d7@gmail.com\n\
+  tls sample@email.com\n\
   forward_proxy {\n\
     basic_auth ${naive_user} ${naive_pass}\n\
     hide_ip\n\
     hide_via\n\
     probe_resistance\n\
   }\n\
-  file_server {\n\
-    root /var/www/xkcdpw-html\n\
+  @host {\n\
+    host ${naive_domain}\n\
+  }\n\
+  route @host {\n\
+    header {\n\
+      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"\n\
+    }\n\
+    file_server {\n\
+      root /var/www/html\n\
+    }\n\
   }\n\
 }\n\
 # _naive_config_end_" /etc/caddy/Caddyfile
