@@ -9,7 +9,7 @@ apt update
 apt install -y curl
 ```
 ```
-bash <(curl -L https://github.com/crazypeace/naive/raw/main/install.sh)
+bash <(curl -L https://github.com/yjyjy15/naive/raw/main/install.sh)
 ```
 
 脚本中很大部分都是在校验用户的输入。其实照着下面的内容自己配置就行了。
