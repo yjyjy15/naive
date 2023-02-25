@@ -314,16 +314,8 @@ sed -i "1i # _naive_config_begin_\n\
     hide_via\n\
     probe_resistance\n\
   }\n\
-  @host {\n\
-    host ${naive_domain}\n\
-  }\n\
-  route @host {\n\
-    header {\n\
-      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"\n\
-    }\n\
-    file_server {\n\
-      root /var/www/html\n\
-    }\n\
+  file_server {\n\
+    root /var/www/html\n\
   }\n\
 }\n\
 # _naive_config_end_" /etc/caddy/Caddyfile
