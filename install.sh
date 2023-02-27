@@ -132,14 +132,14 @@ fi
 
 if [[ "$not_rebuild" == [yY] ]]; then
     echo
-    echo -e "$yellow下载NaïveProxy作者编译的Caddy$none"
+    echo -e "$yellow下载lxhao61编译的Caddy$none"
     echo "----------------------------------------------------------------"
     cd /tmp
-    rm caddy-forwardproxy-naive.tar.xz
-    rm -r caddy-forwardproxy-naive
-    wget https://github.com/klzgrad/forwardproxy/releases/download/caddy2-naive-20221007/caddy-forwardproxy-naive.tar.xz
-    tar -xf caddy-forwardproxy-naive.tar.xz
-    cd caddy-forwardproxy-naive
+    rm caddy-linux-amd64.tar.gz
+    rm -r caddy-linux-amd64
+    wget https://github.com/lxhao61/integrated-examples/releases/download/20230221/caddy-linux-amd64.tar.gz
+    tar -xf caddy-linux-amd64.tar.gz
+    cd caddy-linux-amd64
     ./caddy version
 elif [[ "$not_rebuild" == [nN] ]]; then
     echo
@@ -292,33 +292,33 @@ if [[ -z $naive_pass ]]; then
     done
 fi
 
-# 修改Caddyfile
-echo
-echo -e "$yellow修改Caddyfile$none"
-echo "----------------------------------------------------------------"
-begin_line=$(awk "/_naive_config_begin_/{print NR}" /etc/caddy/Caddyfile)
-end_line=$(awk "/_naive_config_end_/{print NR}" /etc/caddy/Caddyfile)
-if [[ -n $begin_line && -n $end_line ]]; then
-  sed -i "${begin_line},${end_line}d" /etc/caddy/Caddyfile
-fi
-
-sed -i "1i # _naive_config_begin_\n\
-{\n\
-  order forward_proxy before file_server\n\
-}\n\
-:${naive_port}, ${naive_domain}:${naive_port} {\n\
-  tls sample@email.com\n\
-  forward_proxy {\n\
-    basic_auth ${naive_user} ${naive_pass}\n\
-    hide_ip\n\
-    hide_via\n\
-    probe_resistance\n\
-  }\n\
-  file_server {\n\
-    root /var/www/html\n\
-  }\n\
-}\n\
-# _naive_config_end_" /etc/caddy/Caddyfile
+# # 修改Caddyfile
+# echo
+# echo -e "$yellow修改Caddyfile$none"
+# echo "----------------------------------------------------------------"
+# begin_line=$(awk "/_naive_config_begin_/{print NR}" /etc/caddy/Caddyfile)
+# end_line=$(awk "/_naive_config_end_/{print NR}" /etc/caddy/Caddyfile)
+# if [[ -n $begin_line && -n $end_line ]]; then
+#   sed -i "${begin_line},${end_line}d" /etc/caddy/Caddyfile
+# fi
+# 
+# sed -i "1i # _naive_config_begin_\n\
+# {\n\
+#   order forward_proxy before file_server\n\
+# }\n\
+# :${naive_port}, ${naive_domain}:${naive_port} {\n\
+#   tls sample@email.com\n\
+#   forward_proxy {\n\
+#     basic_auth ${naive_user} ${naive_pass}\n\
+#     hide_ip\n\
+#     hide_via\n\
+#     probe_resistance\n\
+#   }\n\
+#   file_server {\n\
+#     root /var/www/html\n\
+#   }\n\
+# }\n\
+# # _naive_config_end_" /etc/caddy/Caddyfile
 
 # 启动NaïveProxy服务端(Caddy)
 echo
@@ -326,30 +326,30 @@ echo -e "$yellow启动NaïveProxy服务端(Caddy)$none"
 echo "----------------------------------------------------------------"
 service caddy start
 
-# 输出参数
-echo
-echo -e "${yellow}NaïveProxy配置参数${none}"
-echo "----------------------------------------------------------------"
-echo -e "域名Domain: ${naive_domain}"
-echo -e "端口Port: ${naive_port}"
-echo -e "用户名Username: ${naive_user}"
-echo -e "密码Password: ${naive_pass}"
+# # 输出参数
+# echo
+# echo -e "${yellow}NaïveProxy配置参数${none}"
+# echo "----------------------------------------------------------------"
+# echo -e "域名Domain: ${naive_domain}"
+# echo -e "端口Port: ${naive_port}"
+# echo -e "用户名Username: ${naive_user}"
+# echo -e "密码Password: ${naive_pass}"
 
-naive_url="https://$(echo -n \
-"${naive_user}:${naive_pass}@${naive_domain}:${naive_port}" \
-| base64 -w 0)"
-echo -e "${cyan}${naive_url}${none}"
-echo "以下两个二维码完全一样的内容"
-qrencode -t UTF8 $naive_url
-qrencode -t ANSI $naive_url
+# naive_url="https://$(echo -n \
+# "${naive_user}:${naive_pass}@${naive_domain}:${naive_port}" \
+# | base64 -w 0)"
+# echo -e "${cyan}${naive_url}${none}"
+# echo "以下两个二维码完全一样的内容"
+# qrencode -t UTF8 $naive_url
+# qrencode -t ANSI $naive_url
 
 echo "---------- END -------------"
-echo "以上节点信息保存在 ~/_naive_url_ 中"
+# echo "以上节点信息保存在 ~/_naive_url_ 中"
 
-echo $naive_url > ~/_naive_url_
-echo "以下两个二维码完全一样的内容" >> ~/_naive_url_
-qrencode -t UTF8 $naive_url >> ~/_naive_url_
-qrencode -t ANSI $naive_url >> ~/_naive_url_
+# echo $naive_url > ~/_naive_url_
+# echo "以下两个二维码完全一样的内容" >> ~/_naive_url_
+# qrencode -t UTF8 $naive_url >> ~/_naive_url_
+# qrencode -t ANSI $naive_url >> ~/_naive_url_
 
 echo
 echo "----------------------------------------------------------------"
